@@ -47,8 +47,11 @@ public class AttributeCoder {
 		if(StrUtils.isNotEmpty(defaultsConf)) {
 			defaults = CollectUtils.toSet(defaultsConf.split(","));
 		}
+		Attribute curAttr = null;
 		for(String column : columns) {
-			attrList.add(createOneAttr(column, notNulls, defaults));
+			curAttr = createOneAttr(column, notNulls, defaults);
+			classContent.getImports().addImport(curAttr.getJavaType());
+			attrList.add(curAttr);
 		}
 		return attrsObj;
 	}
