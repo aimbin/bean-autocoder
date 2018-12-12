@@ -5,7 +5,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.aimbin.autocoder.annotations.Column;
+import org.aimbin.autocoder.component.Attribute;
 import org.aimbin.autocoder.confconst.JavaCodes;
+import org.aimbin.commons.javas.FileUtils;
 import org.aimbin.commons.javas.StrOps;
 import org.aimbin.commons.javas.StrUtils;
 
@@ -29,8 +32,47 @@ public class BaseLineCoders {
 	}
 
 	/** One attribute line. */
-	public static String genOneAttribute(String name, Class<?> type) {
-		return StrUtils.join(JavaCodes.TAB, "private ", type.getSimpleName(), " ", name, " = null;");
+	public static String genOneAttribute(Attribute attr, boolean annotated) {
+		StringBuilder s = new StringBuilder();
+		if(annotated) {
+			s.append(genColumnAnnotation(attr));
+		}
+		s.append(JavaCodes.TAB).append("private ").append(attr.getJavaType().getSimpleName()).append(" ").append(attr.getName()).append(" = null;");
+		return s.toString();
+	}
+	
+	/**Annotation {@link Column} for attribute. */
+	public static String genColumnAnnotation(Attribute attr) {
+		StringBuilder s = new StringBuilder();
+		s.append(JavaCodes.TAB).append("@").append(Column.class.getSimpleName()).append("(");
+		boolean hasAny = false;
+		if(StrUtils.isNotEmpty(attr.getName()) ) {
+			s.append("name = ").append(JavaCodes.toQuotStr(attr.getName()));
+			hasAny = true;
+		}
+		if(attr.isNotNull()) {
+			if(hasAny) {
+				s.append(", ");
+			}
+			s.append("notNull = true");
+			hasAny = true;
+		}
+		if(StrUtils.isNotEmpty(attr.getJdbcType())) {
+			if(hasAny) {
+				s.append(", ");
+			}
+			s.append("jdbcType = ").append(JavaCodes.toQuotStr(attr.getJdbcType()));
+			hasAny = true;
+		}
+		if(attr.getDefaultValue() != null) {
+			if(hasAny) {
+				s.append(", ");
+			}
+			s.append("defaultValue = ").append(JavaCodes.toQuotStr(attr.getDefaultValue()));
+			hasAny = true;
+		}
+		s.append(")").append(FileUtils.newLine());
+		return s.toString();
 	}
 	
 	/**Generate a setter method. */

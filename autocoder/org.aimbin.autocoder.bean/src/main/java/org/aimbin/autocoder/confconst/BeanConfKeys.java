@@ -15,4 +15,6 @@ public interface BeanConfKeys {
 	public static final String TXT_BRIEF = "brief";
 	public static final String TXT_SUF = ".properties";
 	public static final String SYNTAX_COL_SEP = ":";
+	
+	public static final String VALUE_SYSDATE = "sysdate";
 }

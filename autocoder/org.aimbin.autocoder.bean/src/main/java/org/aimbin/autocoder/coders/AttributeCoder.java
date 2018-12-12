@@ -1,9 +1,11 @@
 /** fun_endless@163.com  2018年12月8日 */
 package org.aimbin.autocoder.coders;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -14,6 +16,7 @@ import org.aimbin.autocoder.confconst.BeanConfKeys;
 import org.aimbin.autocoder.typeexchanger.ShortBriefTypeExchanger;
 import org.aimbin.commons.javas.AssertUtils;
 import org.aimbin.commons.javas.CollectUtils;
+import org.aimbin.commons.javas.MapUtils;
 import org.aimbin.commons.javas.StrUtils;
 
 /**Tools for create attribute by column.
@@ -30,7 +33,7 @@ public class AttributeCoder {
 	 * @return
 	 * @throws ClassNotFoundException when type implied by the column name like "name:varchar2"
 	 */
-	public static Attributes createAttributes(Properties props, ClassContent classContent) throws ClassNotFoundException {
+	public static Attributes createAttributes(Properties props, ClassContent classContent) throws Exception {
 		Attributes attrsObj = new Attributes();
 		List<Attribute> attrList = new LinkedList<>();
 		attrsObj.setAttributes(attrList);
@@ -43,9 +46,9 @@ public class AttributeCoder {
 		if(StrUtils.isNotEmpty(notNullsConf)) {
 			notNulls = CollectUtils.toSet(notNullsConf.split(",")) ;
 		}
-		Set<String> defaults = new HashSet<>();
+		Map<String,String> defaults = new HashMap<>();
 		if(StrUtils.isNotEmpty(defaultsConf)) {
-			defaults = CollectUtils.toSet(defaultsConf.split(","));
+			defaults = MapUtils.toMap(defaultsConf);
 		}
 		Attribute curAttr = null;
 		for(String column : columns) {
@@ -66,16 +69,34 @@ public class AttributeCoder {
 	 * @return
 	 * @throws ClassNotFoundException when type implied by the column name like "name:varchar2"
 	 */
-	public static Attribute createOneAttr(String column, Set<String> notNulls,Set<String> defaults) throws ClassNotFoundException {
+	public static Attribute createOneAttr(String column, Set<String> notNulls,Map<String,String> defaults) throws Exception {
 		Attribute attr = new Attribute();
+		createAttrProcessType(attr, column);
+		createAttrProcessColumn(attr, notNulls, defaults);
+		return attr;
+	}
+	
+	/**Process name:javaType. */
+	public static void createAttrProcessType(Attribute attr, String column) throws ClassNotFoundException{
 		String[] nameType = column.split(":");
 		attr.setName(nameType[0]);
 		String typeStr = nameType.length > 1 ? nameType[1]:preProcessTypeByName(attr.getName());
 		attr.setJavaType(getJavaType(typeStr));
 		attr.setType(typeStr);
-		return attr;
 	}
 	
+	/**Process name:javaType. */
+	public static void createAttrProcessColumn(Attribute attr, Set<String> notNulls,Map<String,String> defaults) throws Exception{
+		if(notNulls.contains(attr.getName())) {
+			attr.setNotNull(true);
+		}
+		String defualtValue = defaults.get(attr.getName());
+		if(defualtValue != null) {
+			attr.setDefaultValue(defualtValue);
+		}
+	}
+	
+	/**To JavaType by imply suffix of name. */
 	public static String preProcessTypeByName(String columnName) {
 		if (columnName.endsWith("Time")) {
 			return "time";
