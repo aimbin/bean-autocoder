@@ -1,8 +1,6 @@
 /** fun_endless@163.com  2018年12月8日 */
 package org.aimbin.autocoder.component;
 
-import java.util.List;
-
 /**
  * @author aimbin
  * @verison 1.0.0 2018年12月8日
@@ -12,8 +10,11 @@ public class Attribute implements Commented{
 	private String modifiers = "private";
 	private String name;
 	private String type;
-	private List<String> annotations;
 	private Class<?> javaType;
+	private String jdbcType;
+	private  boolean notNull = false;
+	private Object defaultValue;
+	
 	public Attribute() {
 		
 	}
@@ -45,18 +46,6 @@ public class Attribute implements Commented{
 	 */
 	public void setComment(String comment) {
 		this.comment = comment;
-	}
-	/**
-	 * @return the annotations
-	 */
-	public List<String> getAnnotations() {
-		return annotations;
-	}
-	/**
-	 * @param annotations the annotations to set
-	 */
-	public void setAnnotations(List<String> annotations) {
-		this.annotations = annotations;
 	}
 	/**
 	 * @return the modifiers
@@ -93,6 +82,48 @@ public class Attribute implements Commented{
 	 */
 	public void setJavaType(Class<?> javaType) {
 		this.javaType = javaType;
+	}
+
+	/**
+	 * @return the jdbcType
+	 */
+	public String getJdbcType() {
+		return jdbcType;
+	}
+
+	/**
+	 * @param jdbcType the jdbcType to set
+	 */
+	public void setJdbcType(String jdbcType) {
+		this.jdbcType = jdbcType;
+	}
+
+	/**
+	 * @return the notNull
+	 */
+	public boolean isNotNull() {
+		return notNull;
+	}
+
+	/**
+	 * @param notNull the notNull to set
+	 */
+	public void setNotNull(boolean notNull) {
+		this.notNull = notNull;
+	}
+
+	/**
+	 * @return the defaultValue
+	 */
+	public Object getDefaultValue() {
+		return defaultValue;
+	}
+
+	/**
+	 * @param defaultValue the defaultValue to set
+	 */
+	public void setDefaultValue(Object defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 	
 	

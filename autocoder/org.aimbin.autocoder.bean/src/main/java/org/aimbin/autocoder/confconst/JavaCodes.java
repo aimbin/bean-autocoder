@@ -2,6 +2,7 @@
 package org.aimbin.autocoder.confconst;
 
 import org.aimbin.commons.javas.FileUtils;
+import org.aimbin.commons.javas.StrUtils;
 
 /**
  * @author aimbin
@@ -15,9 +16,15 @@ public class JavaCodes {
 	public static final String BLOCK_END = "}" + FileUtils.newLine();
 	public static final String BLOCK_START = " {" + FileUtils.newLine();
 	public static final String DECLARE_BLOCK = ") {" + FileUtils.newLine();
+	public static final String QUOT = "\"";
+	
+	/**To "value". */
+	public static String toQuotStr(Object value) {
+		return StrUtils.join(QUOT, value == null ? "":value,QUOT);
+	}
 	
 	/**Multiple tabs. */
-	public static final String getTabs(int num) {
+	public static String getTabs(int num) {
 		StringBuilder s= new StringBuilder();
 		for(int i = 0; i < num; i++) {
 			s.append(TAB);

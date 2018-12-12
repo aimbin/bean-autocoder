@@ -5,13 +5,16 @@ import java.io.StringReader;
 import java.util.Map;
 import java.util.Properties;
 
+import org.aimbin.autocoder.annotations.Column;
 import org.aimbin.autocoder.coders.AttributeCoder;
 import org.aimbin.autocoder.coders.ClassCoders;
 import org.aimbin.autocoder.component.ClassContent;
 import org.aimbin.autocoder.confconst.BeanConfKeys;
+import org.aimbin.autocoder.confconst.ModelConfKeys;
 import org.aimbin.autocoder.service.BeanCreateService;
 import org.aimbin.commons.javas.AssertUtils;
 import org.aimbin.commons.javas.FileUtils;
+import org.aimbin.commons.javas.MapUtils;
 import org.aimbin.commons.javas.ObjUtils;
 import org.aimbin.commons.javas.StrUtils;
 
@@ -40,6 +43,9 @@ public class BeanCreateServiceTxtImpl implements BeanCreateService {
 			classContent.setName(pkg + "." + typeName);
 			classContent.setShortName(typeName);
 			classContent.setPackg(pkg);
+			if(MapUtils.getBool(ModelConfKeys.ANNATATION_ENABLE, configs,true)) {
+				classContent.getImports().addImport(Column.class);
+			}
 			classContent.setAttributes(AttributeCoder.createAttributes(props,classContent));
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
@@ -48,7 +54,7 @@ public class BeanCreateServiceTxtImpl implements BeanCreateService {
 		}
 		String outFile = StrUtils.join( baseDir ,"/", classContent.getName(), ".java");
 		System.out.println("outFile:" + outFile);
-		String javaTxt = ClassCoders.build(classContent);
+		String javaTxt = ClassCoders.build(classContent,configs);
 		System.out.println(javaTxt);
 		FileUtils.write(javaTxt, outFile);
 	}

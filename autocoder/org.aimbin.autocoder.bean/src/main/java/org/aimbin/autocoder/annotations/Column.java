@@ -4,22 +4,24 @@ package org.aimbin.autocoder.annotations;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-@Retention(SOURCE)
-@Target(FIELD)
-/**  description of column:name,notNull,defaultValue
+/**  Description of column:name,notNull,defaultValue
  * @author aimbin
  * @verison 1.0.0 2018年12月7日
  */
+@Documented
+@Retention(SOURCE)
+@Target(FIELD)
 public @interface Column {
 	/** Column name. */
-	String name();
+	String name() default "";
 	/**Indicate not-null, default is false. */
 	boolean notNull() default false;
 	/**Default value presented by string. */
-	String defaultValue();
+	String defaultValue() default "";
 	/**JDBC column type.*/
-	String jdbcType();
+	String jdbcType() default "varchar2";
 }
