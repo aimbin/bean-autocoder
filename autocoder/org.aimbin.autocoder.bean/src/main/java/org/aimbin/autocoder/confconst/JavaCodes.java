@@ -12,11 +12,22 @@ public class JavaCodes {
 	/** Tab = 4 spaces. */
 	public static final String TAB = "    ";
 	public static final String END = ";";
+	/**; \n */
 	public static final String END_LINE = ";" + FileUtils.newLine();
-	public static final String BLOCK_END = "}" + FileUtils.newLine();
+	/** } \n */
+	public static final String END_BLOCK = "}" + FileUtils.newLine();
+	/**  { \n */
 	public static final String BLOCK_START = " {" + FileUtils.newLine();
+	/** ) { \n */
 	public static final String DECLARE_BLOCK = ") {" + FileUtils.newLine();
 	public static final String QUOT = "\"";
+	
+	public static final String PKG_BEAN = ".bean";
+	public static final String PKG_DAO = ".dao";
+	public static final String PKG_SERV = ".service";
+	public static final String PKG_REST = ".rest";
+	/**void. */
+	public static final String VOID = "void";
 	
 	/**To "value". */
 	public static String toQuotStr(Object value) {
