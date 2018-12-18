@@ -1,19 +1,30 @@
 /** fun_endless@163.com  2018年12月8日 */
 package org.aimbin.autocoder.component;
 
+import java.lang.reflect.Modifier;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.aimbin.autocoder.coders.TypeNames;
+
 /** Full class content;
  * @author aimbin
  * @verison 1.0.0 2018年12月8日
  */
-public class ClassContent implements Commented{
-	private String shortName;
+public class ClassContent implements Commented, Classed{
+	private TypeNames typeName = TypeNames.CLASS;
+	private String simpleName;
+	/** Full name. */
 	private String name;
 	private String comment;
+	private int modifiers = Modifier.PUBLIC;
 	private String packg;
 	private ClassImports imports = new ClassImports();
-	private Attributes attributes = new Attributes();
+	private List<Attribute> attributes;
+	private List<ClassMethod> methods;
 	private EqualHash equalHash;
 	private ToString toString;
+	private List<Classed> genericTypes = null;
 	
 	/**Empty constructor. */
 	public ClassContent() {
@@ -24,11 +35,35 @@ public class ClassContent implements Commented{
 	 * @param name Full name.
 	 * @param shortName
 	 */
-	public ClassContent(String name, String shortName) {
+	public ClassContent(String name, String simpleName) {
 		this.name = name;
-		this.shortName = shortName;
+		this.simpleName = simpleName;
 	}
 	
+	/**Add a method. */
+	public ClassContent addMethod(ClassMethod method) {
+		if(this.methods == null) {
+			this.methods = new LinkedList<>();
+		}
+		this.methods.add(method);
+		return this;
+	}
+	
+	
+	/**
+	 * @return the genericTypes
+	 */
+	public List<Classed> getGenericTypes() {
+		return genericTypes;
+	}
+
+	/**
+	 * @param genericTypes the genericTypes to set
+	 */
+	public void setGenericTypes(List<Classed> genericTypes) {
+		this.genericTypes = genericTypes;
+	}
+
 	/**
 	 * @return the name
 	 */
@@ -80,18 +115,35 @@ public class ClassContent implements Commented{
 	public void setImports(ClassImports imports) {
 		this.imports = imports;
 	}
+	
 	/**
 	 * @return the attributes
 	 */
-	public Attributes getAttributes() {
+	public List<Attribute> getAttributes() {
 		return attributes;
 	}
+
 	/**
 	 * @param attributes the attributes to set
 	 */
-	public void setAttributes(Attributes attributes) {
+	public void setAttributes(List<Attribute> attributes) {
 		this.attributes = attributes;
 	}
+
+	/**
+	 * @return the methods
+	 */
+	public List<ClassMethod> getMethods() {
+		return methods;
+	}
+
+	/**
+	 * @param methods the methods to set
+	 */
+	public void setMethods(List<ClassMethod> methods) {
+		this.methods = methods;
+	}
+
 	/**
 	 * @return the equalHash
 	 */
@@ -117,20 +169,59 @@ public class ClassContent implements Commented{
 		this.toString = toString;
 	}
 
+
 	/**
-	 * @return the shortName
+	 * @return the simpleName
 	 */
-	public String getShortName() {
-		return shortName;
+	public String getSimpleName() {
+		return simpleName;
 	}
 
 	/**
-	 * @param shortName the shortName to set
+	 * @param simpleName the simpleName to set
 	 */
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
+	public void setSimpleName(String simpleName) {
+		this.simpleName = simpleName;
+	}
+
+	/**
+	 * @return the typeName
+	 */
+	public TypeNames getTypeName() {
+		return typeName;
+	}
+
+	/**
+	 * @param typeName the typeName to set
+	 */
+	public void setTypeName(TypeNames typeName) {
+		this.typeName = typeName;
+	}
+
+	
+
+	/**
+	 * @return the modifiers
+	 */
+	public int getModifiers() {
+		return modifiers;
+	}
+
+	/**
+	 * @param modifiers the modifiers to set
+	 */
+	public void setModifiers(int modifiers) {
+		this.modifiers = modifiers;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.aimbin.autocoder.component.Classed#getRawType()
+	 */
+	@Override
+	public Class<?> getRawType() {
+		return null;
 	}
 	
-	
+
 	
 }

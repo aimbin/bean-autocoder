@@ -82,7 +82,7 @@ public class FileUtils {
 		String[] folderNameSuffix = getFolderNameSuffix(filePath);
 		if(folderNameSuffix[0] != null) {
 			File folder = new File(folderNameSuffix[0]);
-			if(!folder.exists() && folder.isDirectory()) {
+			if(!folder.exists()) {
 				folder.mkdirs();
 			}
 		}
@@ -105,10 +105,10 @@ public class FileUtils {
 	}
 	/**To UNIX style path. */
 	public static String toUnixPath(final String filePath) {
-		if(filePath.indexOf(PATH_SEP) >= 0) {
-			return filePath;
-		}else {
+		if(filePath.indexOf(PATH_SEP_WIN) >= 0) {
 			return filePath.replace(PATH_SEP_WIN, PATH_SEP);
+		}else {
+			return filePath;
 		}
 	}
 	

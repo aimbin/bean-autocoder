@@ -1,13 +1,19 @@
 /** fun_endless@163.com  2018年12月9日 */
 package org.aimbin.autocoder.coders;
 
+import java.lang.reflect.Modifier;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.aimbin.autocoder.annotations.Column;
 import org.aimbin.autocoder.component.Attribute;
+import org.aimbin.autocoder.component.ClassContent;
+import org.aimbin.autocoder.component.ClassMethod;
+import org.aimbin.autocoder.component.Classed;
 import org.aimbin.autocoder.confconst.JavaCodes;
+import org.aimbin.commons.javas.CollectUtils;
 import org.aimbin.commons.javas.FileUtils;
 import org.aimbin.commons.javas.StrOps;
 import org.aimbin.commons.javas.StrUtils;
@@ -26,9 +32,85 @@ public class BaseLineCoders {
 	public static String genImports(String imp) {
 		return StrUtils.join("import ",processShortJavaClaz4Import(imp),";");
 	}
+	/** public class Name { */
+	public static String genTypeStart(String className, TypeNames javatype) {
+		return StrUtils.join("public ",javatype," ",className," {");
+	}
 	
-	public static String genClassStart(String className) {
-		return StrUtils.join("public class  ",className," {");
+	/** One attribute line.
+	 * 
+	 * @author aimbin
+	 * @version 1.0.0 2018年12月18日
+	 * @param method
+	 * @param isInterface
+	 * @param content ClassContent to add imports.
+	 * @return
+	 */
+	public static String genOneMethod(ClassMethod method, boolean isInterface, ClassContent content) {
+		StringBuilder s = new StringBuilder();
+		s.append(FileUtils.newLine()).append(JavaCodes.TAB).append(Modifier.toString(method.getModifiers())).append(" ");
+		if(content != null) {
+			content.getImports().addImport(method.getJavaType());
+		}
+		s.append(genTypeName(method.getJavaType()));
+		s.append(" ").append(method.getName()).append(" (");
+		s.append(genMethodParams(method.getParamNames(), method.getParamTypes(),content));
+		if(isInterface) {
+			s.append(") ").append(JavaCodes.END_LINE);
+		}else {
+			s.append(JavaCodes.DECLARE_BLOCK);
+			s.append(JavaCodes.TAB).append(JavaCodes.END_BLOCK);
+		}
+		return s.toString();
+	}
+	/** Map&lt;String,Object&gt*/
+	public static String genTypeName(Classed classType) {
+		StringBuilder s = new StringBuilder();
+		if(classType == null) {
+			s.append("void");
+		}else {
+			s.append(classType.getSimpleName()).append(genGenerics(classType.getGenericTypes()));
+		}
+		return s.toString();
+	}
+	
+	/** &lt; String,Object &gt*/
+	public static String genGenerics(List<Classed> generics) {
+		StringBuilder s = new StringBuilder();
+		if(CollectUtils.isEmpty(generics)) {
+			return s.toString();
+		}
+		Iterator<Classed> itr = generics.iterator();
+		s.append("<").append(itr.next().getSimpleName());
+		while(itr.hasNext()) {
+			s.append(", ").append(itr.next().getSimpleName());
+		}
+		s.append("> ");
+		return s.toString();
+	}
+	
+	/**Method parameters. */
+	public static String genMethodParams(List<String> paramNames, Map<String,Classed> paramTypes,  ClassContent content) {
+		if(CollectUtils.isEmpty(paramNames)) {
+			return "";
+		}
+		StringBuilder s = new StringBuilder();
+		Iterator<String > itr = paramNames.iterator();
+		String paramName = itr.next();
+		Classed paramType = paramTypes.get(paramName);
+		if(content != null) {
+			content.getImports().addImport(paramType);
+		}
+		s.append(genTypeName(paramType)).append(" ").append(paramName);
+		while(itr.hasNext()) {
+			paramName = itr.next();
+			paramType = paramTypes.get(paramName);
+			if(content != null) {
+				content.getImports().addImport(paramType);
+			}
+			s.append(", ").append(paramType.getSimpleName()).append(" ").append(paramName);
+		}
+		return s.toString();
 	}
 
 	/** One attribute line. */
@@ -76,24 +158,24 @@ public class BaseLineCoders {
 	}
 	
 	/**Generate a setter method. */
-	public static String genSetter(String name, Class<?> type) {
+	public static String genSetter(String name, Classed type) {
 		StringBuilder s = new StringBuilder();
 		s.append(JavaCodes.TAB).append("public void set").append(StrOps.upperFirst(name)).append("(")
 				.append(type.getSimpleName()).append(" ").append(name).append(JavaCodes.DECLARE_BLOCK);
 		s.append(JavaCodes.getTabs(2)).append(" this.").append(name).append(" = ").append(name)
 				.append(JavaCodes.END_LINE);
-		s.append(JavaCodes.TAB).append(JavaCodes.BLOCK_END);
+		s.append(JavaCodes.TAB).append(JavaCodes.END_BLOCK);
 		return s.toString();
 	}
 	
 	/**Generate a setter method. */
-	public static String genGetter(String name, Class<?> type) {
+	public static String genGetter(String name, Classed type) {
 		StringBuilder s = new StringBuilder();
 		s.append(JavaCodes.TAB).append("public ").append(type.getSimpleName());
 		s.append(" get").append(StrOps.upperFirst(name));
 		s.append("(").append(JavaCodes.DECLARE_BLOCK);
 		s.append(JavaCodes.getTabs(2)).append("return this.").append(name).append(JavaCodes.END_LINE);
-		s.append(JavaCodes.TAB).append(JavaCodes.BLOCK_END);
+		s.append(JavaCodes.TAB).append(JavaCodes.END_BLOCK);
 		return s.toString();
 	}
 	

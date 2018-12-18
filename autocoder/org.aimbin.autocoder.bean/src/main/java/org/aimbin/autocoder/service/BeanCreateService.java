@@ -3,6 +3,8 @@ package org.aimbin.autocoder.service;
 
 import java.util.Map;
 
+import org.aimbin.autocoder.component.ClassContent;
+
 /** Create a POJO, java bean class.
  * @author aimbin
  * @verison 1.0.0 2018年11月28日
@@ -16,5 +18,5 @@ public interface BeanCreateService {
 	 * @param configs
 	 * @return
 	 */
-	public void createBean(Object content, Map<String,String> configs);
+	public ClassContent createBean(Object content, Map<String,String> configs);
 }

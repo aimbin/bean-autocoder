@@ -17,6 +17,17 @@ public class StrOps {
 		return  Character.toUpperCase(value.charAt(0)) + value.substring(1); 
 	}
 	
+	/** Only lower-case the first char. */
+	public static String lowerFirst(String value) {
+		if(value == null || value.length() == 0) {
+			return value;
+		}
+		if(value.length() == 1) {
+			return value.toLowerCase();
+		}
+		return  Character.toLowerCase(value.charAt(0)) + value.substring(1); 
+	}
+	
 	/**Safe split, return null is value is null. */
 	public static String[] split(String value) {
 		if(value == null) {

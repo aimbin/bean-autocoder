@@ -10,8 +10,8 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.aimbin.autocoder.component.Attribute;
-import org.aimbin.autocoder.component.Attributes;
 import org.aimbin.autocoder.component.ClassContent;
+import org.aimbin.autocoder.component.LoadedTypeClassed;
 import org.aimbin.autocoder.confconst.BeanConfKeys;
 import org.aimbin.autocoder.typeexchanger.ShortBriefTypeExchanger;
 import org.aimbin.commons.javas.AssertUtils;
@@ -33,10 +33,8 @@ public class AttributeCoder {
 	 * @return
 	 * @throws ClassNotFoundException when type implied by the column name like "name:varchar2"
 	 */
-	public static Attributes createAttributes(Properties props, ClassContent classContent) throws Exception {
-		Attributes attrsObj = new Attributes();
+	public static List<Attribute> createAttributes(Properties props, ClassContent classContent) throws Exception {
 		List<Attribute> attrList = new LinkedList<>();
-		attrsObj.setAttributes(attrList);
 		String columnsConf =  props.getProperty(BeanConfKeys.COL_NAMES);
 		AssertUtils.canNotEmpty(BeanConfKeys.COL_NAMES, columnsConf);
 		String notNullsConf =  props.getProperty(BeanConfKeys.COL_NOT_NULL);
@@ -56,7 +54,7 @@ public class AttributeCoder {
 			classContent.getImports().addImport(curAttr.getJavaType());
 			attrList.add(curAttr);
 		}
-		return attrsObj;
+		return attrList;
 	}
 	
 	/**
@@ -81,7 +79,7 @@ public class AttributeCoder {
 		String[] nameType = column.split(":");
 		attr.setName(nameType[0]);
 		String typeStr = nameType.length > 1 ? nameType[1]:preProcessTypeByName(attr.getName());
-		attr.setJavaType(getJavaType(typeStr));
+		attr.setJavaType(new LoadedTypeClassed(getJavaType(typeStr)));
 		attr.setType(typeStr);
 	}
 	

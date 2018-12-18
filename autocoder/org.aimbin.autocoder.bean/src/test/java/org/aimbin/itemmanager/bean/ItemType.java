@@ -3,7 +3,7 @@ package org.aimbin.itemmanager.bean;
 import java.util.Date;
 import org.aimbin.autocoder.annotations.Column;
 
-public class  ItemType {
+public class ItemType {
 
     @Column(name = "id")
     private String id = null;

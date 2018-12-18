@@ -17,4 +17,6 @@ public interface BeanConfKeys {
 	public static final String SYNTAX_COL_SEP = ":";
 	
 	public static final String VALUE_SYSDATE = "sysdate";
+	/**Output file.*/
+	public static final String FILE_DIST_OUT = "dist_file";
 }

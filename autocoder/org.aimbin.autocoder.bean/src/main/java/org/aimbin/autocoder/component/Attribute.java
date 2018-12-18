@@ -1,16 +1,18 @@
 /** fun_endless@163.com  2018年12月8日 */
 package org.aimbin.autocoder.component;
 
+import java.lang.reflect.Modifier;
+
 /**
  * @author aimbin
  * @verison 1.0.0 2018年12月8日
  */
-public class Attribute implements Commented{
+public class Attribute implements Commented,ModifierNamed, Typed{
 	private String comment;
-	private String modifiers = "private";
+	private int modifiers = Modifier.PRIVATE;
 	private String name;
 	private String type;
-	private Class<?> javaType;
+	private Classed javaType;
 	private String jdbcType;
 	private  boolean notNull = false;
 	private Object defaultValue;
@@ -47,18 +49,22 @@ public class Attribute implements Commented{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+	
+
 	/**
 	 * @return the modifiers
 	 */
-	public String getModifiers() {
+	public int getModifiers() {
 		return modifiers;
 	}
+
 	/**
 	 * @param modifiers the modifiers to set
 	 */
-	public void setModifiers(String modifiers) {
+	public void setModifiers(int modifiers) {
 		this.modifiers = modifiers;
 	}
+
 	/**
 	 * @return the type
 	 */
@@ -71,16 +77,18 @@ public class Attribute implements Commented{
 	public void setType(String type) {
 		this.type = type;
 	}
+
 	/**
 	 * @return the javaType
 	 */
-	public Class<?> getJavaType() {
+	public Classed getJavaType() {
 		return javaType;
 	}
+
 	/**
 	 * @param javaType the javaType to set
 	 */
-	public void setJavaType(Class<?> javaType) {
+	public void setJavaType(Classed javaType) {
 		this.javaType = javaType;
 	}
 

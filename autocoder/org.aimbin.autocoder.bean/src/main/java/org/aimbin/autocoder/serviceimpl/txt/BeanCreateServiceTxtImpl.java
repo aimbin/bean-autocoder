@@ -7,16 +7,14 @@ import java.util.Properties;
 
 import org.aimbin.autocoder.annotations.Column;
 import org.aimbin.autocoder.coders.AttributeCoder;
-import org.aimbin.autocoder.coders.ClassCoders;
 import org.aimbin.autocoder.component.ClassContent;
 import org.aimbin.autocoder.confconst.BeanConfKeys;
+import org.aimbin.autocoder.confconst.JavaCodeUtils;
 import org.aimbin.autocoder.confconst.ModelConfKeys;
 import org.aimbin.autocoder.service.BeanCreateService;
 import org.aimbin.commons.javas.AssertUtils;
-import org.aimbin.commons.javas.FileUtils;
 import org.aimbin.commons.javas.MapUtils;
 import org.aimbin.commons.javas.ObjUtils;
-import org.aimbin.commons.javas.StrUtils;
 
 /**Create bean by properties file.
  * @author aimbin
@@ -28,20 +26,20 @@ public class BeanCreateServiceTxtImpl implements BeanCreateService {
 	 * @see org.aimbin.autocoder.service.BeanCreateService#createBean(java.lang.Object, java.util.Map)
 	 */
 	@Override
-	public  void createBean(Object content, Map<String, String> configs) {
+	public  ClassContent createBean(Object content, Map<String, String> configs) {
 		String txt = content.toString();
 		Properties props = new Properties();
 		StringReader sr = new StringReader(txt);
-		String baseDir = configs.getOrDefault(BeanConfKeys.FILE_DIST_DIR, "/");
 		String fileName = configs.get(BeanConfKeys.FILE_NAME);
 		AssertUtils.canNotEmpty(BeanConfKeys.FILE_NAME, fileName);
-		final String typeName = TxtParser.getTypeName(fileName);
-		ClassContent classContent = new ClassContent();;
+		final String typeName = JavaCodeUtils.getTypeName(fileName);
+		ClassContent classContent = new ClassContent();
+		String pkg = null;
 		try {
 			props.load(sr);
-			String pkg = props.getProperty(BeanConfKeys.CLASS_PKG);
+			pkg = props.getProperty(BeanConfKeys.CLASS_PKG);
 			classContent.setName(pkg + "." + typeName);
-			classContent.setShortName(typeName);
+			classContent.setSimpleName(typeName);
 			classContent.setPackg(pkg);
 			if(MapUtils.getBool(ModelConfKeys.ANNATATION_ENABLE, configs,true)) {
 				classContent.getImports().addImport(Column.class);
@@ -52,11 +50,8 @@ public class BeanCreateServiceTxtImpl implements BeanCreateService {
 		}finally {
 			ObjUtils.close( sr); 
 		}
-		String outFile = StrUtils.join( baseDir ,"/", classContent.getName(), ".java");
-		System.out.println("outFile:" + outFile);
-		String javaTxt = ClassCoders.build(classContent,configs);
-		System.out.println(javaTxt);
-		FileUtils.write(javaTxt, outFile);
+		JavaCodeUtils.distToFile(classContent, configs, true);
+		return classContent;
 	}
 
 	
