@@ -1,8 +1,8 @@
 # bean-autocoder
 Code auto creator:
-1. Create bean start from properties file;
-2. Create MyBatis mapper  from bean;
-3. Create MyBatis mapper XML from bean;
+1. Create bean start from properties file;  -- in beta
+2. Create MyBatis mapper  from bean;        -- in beta
+3. Create MyBatis mapper XML from bean;     -- working
 4. Create Service from bean;
 5. Create Spring-REST from bean;
 6. Create Database table SQL from bean;
@@ -121,5 +121,26 @@ public class  ItemType {
     public Boolean getRecentUsed() {
         return this.recentUsed;
     }
+}
+```
+
+## Result sample of from bean to Mybatis mapper interface
+```java
+package org.aimbin.itemmanager.dao;
+
+import java.util.List;
+import java.util.Map;
+import org.aimbin.itemmanager.bean.ItemType;
+
+public interface ItemTypeMapper {
+
+
+    public void createItemType (ItemType itemType) ;
+
+    public void updateItemType (ItemType itemType) ;
+
+    public void deleteItemType (String id) ;
+
+    public List<ItemType>  queryItemType (Map<String, Object>  filter) ;
 }
 ```
