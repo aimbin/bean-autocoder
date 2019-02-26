@@ -1,10 +1,15 @@
 # bean-autocoder
 Code auto creator:
 1. Create bean start from properties file;  -- in beta
+   Contract-interface: BeanCreateService.
 2. Create MyBatis mapper  from bean;        -- in beta
+   Contract-interface: DaoCreateService.
 3. Create MyBatis mapper XML from bean;     -- working
+   Contract-interface: SqlCreateService.
 4. Create Service from bean;
+   Contract-interface: ServiceCreateService.
 5. Create Spring-REST from bean;
+   Contract-interface: RestCreateService.
 6. Create Database table SQL from bean;
 
 ## Bean properties sample
